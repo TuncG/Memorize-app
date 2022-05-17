@@ -8,20 +8,74 @@
 import SwiftUI
 
 struct ContentView: View {
+    var emojis = ["🚇","🚙","🚓","🏎","🚃","🚛","🚗","🚕","🛵","🚲","🚖","🚇","🛬","🛩"
+                  ,"🚑","🚎","🚌","🚊","🚝","🛴","🏍","🛺"]
+    
+    @State var emojiCount = 6
+    
     var body: some View {
-        HStack{
-            CardView(isFaceUp: true)
-            CardView(isFaceUp: true)
-            CardView(isFaceUp: false)
-            CardView(isFaceUp: true)
-            
+        
+        VStack{
+            ScrollView{
+                LazyVGrid(columns: [GridItem(.adaptive(minimum: 65))]){
+                    ForEach(emojis[0..<emojiCount],id: \.self, content:  { emoji in
+                        
+                        CardView(content: emoji,isFaceUp: true).aspectRatio(2/3,contentMode: .fit)
+                    }
+                    
+                    )
+                    
+                   
+                    
+                    
+                }.foregroundColor(.red)
+                    
+                
+            }
+            Spacer()
+            HStack{
+                remove
+                Spacer()
+                add
+                
+            }
+            .padding(.horizontal)
+            .font(.largeTitle)
+           
         }
-        .padding(.horizontal).foregroundColor(.red)
+        
+        .padding(.horizontal)
 //
     }
     
-    func foo(){
+    var remove: some View {
+        Button{
+            if emojiCount > 1{
+                
+                emojiCount -= 1
+                
+            }
+        } label: {
+            VStack{
+                Image(systemName: "minus.circle")
+            }
+            
+        }
         
+    }
+    
+    var add: some View {
+        Button {
+            if emojiCount < emojis.count {
+                emojiCount += 1
+                
+            }
+        } label: {
+            VStack{
+                Image(systemName: "plus.circle")
+            }
+            
+        }
     }
 }
 
@@ -35,6 +89,7 @@ struct ContentView_Previews: PreviewProvider {
 
 
 struct CardView: View {
+    var content: String
    @State var isFaceUp: Bool
     
     var body: some View{
@@ -44,8 +99,8 @@ struct CardView: View {
             
             if isFaceUp{
                 shape.fill().foregroundColor(.white)
-                shape.stroke(lineWidth: 3)
-                Text("🚅")
+                shape.strokeBorder(lineWidth: 3)
+                Text(content)
                     .font(.largeTitle)
             }else{
                 RoundedRectangle(cornerRadius: 10.0).fill()
